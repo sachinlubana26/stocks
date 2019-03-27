@@ -78,7 +78,7 @@ function showUsage() {
 
         commands can be:
 
-        info:      used to retrieve stocks infromation
+        info:      used to retrieve stocks information
         help:     used to print the usage guide
     `;
     console.log(usageText);

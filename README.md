@@ -34,7 +34,7 @@ USAGE
 
         commands can be:
 
-        info:     used to retrieve stocks infromation
+        info:     used to retrieve stocks information
         help:     used to print the usage guide
 
 ```
@@ -74,6 +74,13 @@ OUTPUT
 2018-03-20: Closed at 	175.24	(174.94 ~ 176.8)
 
 ```
+
+
+DOCUMENT
+----------------------------- 
+
+Documentation is presented in this [document](https://docs.google.com/document/d/1q4VOeo_El70ABb28GMRn6xxD4jH4pcroh26tdkS2mWY/edit?usp=sharing).
+
 
 
 MAINTAINERS
