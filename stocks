@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const utils = require('./service/utils');
+const service = require('./service/stocks');
+
+const env = process.env.NODE_ENV || 'development';
+
+utils.log(`Running in ${env} environment`);
+
+// validate CLI arguments
+utils.validateCLIArgs();
+
+switch(process.argv[2]) {
+    case 'help':
+        utils.showUsage();
+        break;
+    case 'info':
+        processRequest();
+        break;
+    default:
+        utils.logError('invalid command passed');
+        utils.showUsage();
+}
+
+async function processRequest() {
+    try {
+        let userInputs = await service.getUserInputs();
+        service.getStocksInfo(userInputs);
+    } catch(err) {
+        utils.logError(err)
+    }
+}
