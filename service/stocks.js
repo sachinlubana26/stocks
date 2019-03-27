@@ -9,6 +9,7 @@ const moment = require('moment');
 const config = require('../config/')
 const utils = require('./utils');
 const request = require('./http');
+const slack = require('./slack');
 
 const errorMessages = config.errorMessages;
 
@@ -91,10 +92,17 @@ async function getStockPerformance(userInputs) {
 
 /* displayStockInfo: function to build output of stock performance */
 function displayStockInfo(info) {
-
-    // display stock information based on format defined in config
-    // simply parse the stock information fetched from api
-    
+    const data = info.datatable.data;
+    const logFormat = config.displayOutput.info;
+    let output = config.displayOutput.header;
+    for (let elem of data) {
+        let log = logFormat.replace("[DATE]", elem[1]);
+        log = log.replace("[HIGH]", elem[3]);
+        log = log.replace("[LOW]", elem[4]);
+        log = log.replace("[CLOSE]", elem[5]);
+        output += log+"\n";
+    }
+    return output;
 }
 
 /* getStocksInfo: function to get stock information */
@@ -115,6 +123,13 @@ async function getStocksInfo(userInputs) {
             utils.logInfo("\nNo stock information found for the given date range\n");
             return null;
         }
+
+        // display stock performance output 
+        let output = displayStockInfo(stockInfo);
+        utils.log(`\nOUTPUT\n\n${output}`);
+       
+        // send slack notification (prod only env)
+        slack.notifyStockInfo(userInputs, output);
 
         // return length of the data fetched from API
         return stockInfo.datatable.data.length;
