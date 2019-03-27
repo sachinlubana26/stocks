@@ -105,6 +105,45 @@ function displayStockInfo(info) {
     return output;
 }
 
+/* caclulateDrawdowns: function to calculate draw downs */
+function caclulateDrawdowns(stockInfo) {
+    let maxDrawDown = '';
+    let maxDrawDownIndex = '';
+    let counter = 1;
+    let firstThreeDrawDown = 'First 3 Drawdowns:\n\n';
+    for (let i = (stockInfo.length-1); i >= 0; i--) {
+        if(counter > config.drawDownLimit) break;
+        const elem = stockInfo[i];
+        const day = elem[1];
+        const low = elem[4];
+        const high = elem[3];
+        let drawDown = ((low-high) / low) * 100;
+        drawDown = parseFloat(drawDown).toPrecision(2);
+        firstThreeDrawDown += drawDown + '%\t\t' + '(' + high + ' on ' + day + '\t->\t' + low + ' on ' + day+')\n';
+        counter++;
+        if (!maxDrawDown || drawDown > maxDrawDown) {
+            maxDrawDownIndex = i;
+            maxDrawDown = drawDown;
+        }
+    }
+    utils.log(firstThreeDrawDown);
+    let elem = stockInfo[maxDrawDownIndex]
+    utils.log('Maximum drawdown:\n'+maxDrawDown + '%\t\t ' + '(' + elem[3] + ' on ' + elem[1] + '\t->\t' + elem[4] + ' on ' + elem[1]+')\n');
+}
+
+/* caclulateReturns: function to calculate returns */
+function caclulateReturns(stockInfo) {
+    const start = stockInfo[stockInfo.length-1];
+    const end = stockInfo[0];
+    const sClose = start[5];
+    const eClose = end[5];
+    let retVal = eClose-sClose;
+    let retPer = (retVal / eClose) * 100;
+    retPer = parseFloat(retPer).toPrecision(2);
+    //Return: 2.740000000000009 [+1.6%] (172.26 on 02.01.18 -> 175.0 on 05.01.18)
+    utils.log('Return:\n ' + retVal + '\t [' + retPer  + '%]\t(' + sClose + ' on ' + start[1] + '\t->\t' + eClose + ' on ' + end[1] + ')\n'); 
+}
+
 /* getStocksInfo: function to get stock information */
 async function getStocksInfo(userInputs) {
     try {
@@ -127,6 +166,12 @@ async function getStocksInfo(userInputs) {
         // display stock performance output 
         let output = displayStockInfo(stockInfo);
         utils.log(`\nOUTPUT\n\n${output}`);
+
+        // calculate drawdowns
+        caclulateDrawdowns(stockInfo.datatable.data);
+
+        // calculate returns
+        caclulateReturns(stockInfo.datatable.data);
        
         // send slack notification (prod only env)
         slack.notifyStockInfo(userInputs, output);
