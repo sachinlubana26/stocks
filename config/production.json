@@ -26,5 +26,6 @@
         "slack": {
             "webhook": "https://hooks.slack.com/services/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"
         }
-    }
+    },
+    "drawDownLimit": 3
 }
