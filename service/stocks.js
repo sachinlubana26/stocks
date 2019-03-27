@@ -18,10 +18,18 @@ module.exports = {
 
 /* getUserInputs: function to get user inputs for evaluating stock performance */
 async function getUserInputs() {
-
-    // ask question to get user inputs
-    // question are defined in config
-
+    try {
+        var inputObj =  {};
+        const questionsObj = config.inputQuestions;
+        const keys = Object.keys(questionsObj);
+        for (const questType of keys) {
+            let question = questionsObj[questType];
+            inputObj[questType] = await utils.prompt(question);
+        }
+        return inputObj;
+    } catch(err) {
+        return err;
+    }
 }
 
 /* validateUserInputs: function to validate user inputs provided to fetch stock performance */
