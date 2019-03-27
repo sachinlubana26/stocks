@@ -1,0 +1,38 @@
+{
+  "name": "stocks performance evaluation application",
+  "version": "1.0.0",
+  "description": "CLI tool to get information about stocks performance",
+  "main": "stocks",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test",
+    "dev": "NODE_ENV='development' ./stocks info",
+    "stage": "NODE_ENV='testing' ./stocks info",
+    "prod": "NODE_ENV='production' ./stocks info"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sachinlubana26/stocks.git"
+  },
+  "keywords": [
+    "stocks",
+    "cli",
+    "nodejs"
+  ],
+  "author": "Sachin Lubana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sachinlubana26/stocks/issues"
+  },
+  "homepage": "https://github.com/sachinlubana26/stocks#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "moment": "^2.24.0",
+    "readline": "^1.3.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
+}

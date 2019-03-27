@@ -1,0 +1,30 @@
+{
+    "dateFormat": "YYYY-MM-DD",
+    "inputQuestions": {
+        "stockSymbol": "Type in your stock symbol: ",
+        "evalStartDate": "Type in start date to evaluate the stock performance from (YYYY-MM-DD): ",
+        "evalEndDate": "Type in end date to evaluate the stock performance till (YYYY-MM-DD): "
+    },
+    "errorMessages": {
+        "E101": "stock API key is invalid",
+        "E102": "stock symbol is invalid",
+        "E103": "stock evaluation start date is invalid",
+        "E104": "stock evaluation end date is invalid",
+        "E105": "stock evaluation date range is not valid"
+    },
+    "stocksAPI": {
+        "key": "xTGhCsfGzhA5C1TWfMPF",
+        "uri": "https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json",
+        "requestParams": "?api_key=xTGhCsfGzhA5C1TWfMPF&ticker=[TICKER]&date.gte=[START_DATE]&date.lte=[END_DATE]&qopts.columns=ticker,date,open,high,low,close",
+        "method": "GET"
+    },
+    "displayOutput": {
+        "header": "DATE\t\t_________\tCLOSE\t\tLOW ~ HIGH\n",
+        "info": "[DATE]\tClosed at \t[CLOSE]\t\t([LOW] ~ [HIGH])"
+    },
+    "notification": {
+        "slack": {
+            "webhook": "https://hooks.slack.com/services/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"
+        }
+    }
+}
