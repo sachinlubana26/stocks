@@ -34,16 +34,39 @@ async function getUserInputs() {
 
 /* validateUserInputs: function to validate user inputs provided to fetch stock performance */
 function validateUserInputs(inputs) {
+    const errors = {};
 
-    // validate user inputs
-    // check is stock symbol is passed
-    // check if start is provided
-    // check if provided start date is of valid format
-    // check if end date is provided
-    // check if provided end date is of valid format
-    // set end date to today if not provided
-    // check if start date and end date range is valid
-    
+    // check if stock symbol is given by user
+    if (!inputs.stockSymbol || inputs.stockSymbol == '') {
+        errors['E102'] = errorMessages['E102'];
+    }
+
+    // check if start date is given and is of valid date format
+    if (!inputs.evalStartDate || (inputs.evalStartDate && !moment(inputs.evalStartDate, config.dateFormat,true).isValid()) ) {
+        errors['E103'] = errorMessages['E103'];
+        return {inputs, errors}
+    }
+
+    // check if given end date is of valid date format
+    if (inputs.evalEndDate  && !moment(inputs.evalEndDate, config.dateFormat,true).isValid()) {
+        errors['E104'] = errorMessages['E104'];
+        return {inputs, errors}
+    }
+
+    // set todays date as end date if not given
+    if (!inputs.evalEndDate) {
+        inputs.evalEndDate = moment().format(config.dateFormat);
+    }
+
+    // check if date range is valid
+    if (moment(inputs.evalStartDate).isAfter(inputs.evalEndDate)) {
+        errors['E105'] = errorMessages['E105'];
+        return {inputs, errors}
+    }
+
+    if (Object.keys(errors).length === 0) return {inputs, errors: null}
+
+    return {inputs, errors}
 }
 
 /* getStockPerformance: function to get stock performance information */
