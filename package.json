@@ -1,5 +1,5 @@
 {
-  "name": "stocks performance evaluation application",
+  "name": "stocks",
   "version": "1.0.0",
   "description": "CLI tool to get information about stocks performance",
   "main": "stocks",
