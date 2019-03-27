@@ -8,6 +8,7 @@ const moment = require('moment');
 
 const config = require('../config/')
 const utils = require('./utils');
+const request = require('./http');
 
 const errorMessages = config.errorMessages;
 
@@ -71,11 +72,21 @@ function validateUserInputs(inputs) {
 
 /* getStockPerformance: function to get stock performance information */
 async function getStockPerformance(userInputs) {
-
-    // use stock api to fetch stock performance
-    // for a given stock symbol and date range
-    // make web service call here
-    
+    try {
+        let opts = config.stocksAPI;
+        let requestParams = opts.requestParams;
+        requestParams = requestParams.replace("[TICKER]", userInputs.stockSymbol);
+        requestParams = requestParams.replace("[START_DATE]", userInputs.evalStartDate);
+        requestParams = requestParams.replace("[END_DATE]", userInputs.evalEndDate);
+        const options = {
+            method: opts.method,
+            uri: `${opts.uri}${requestParams}`
+        }
+        let response = await request.run(options);
+        return JSON.parse(response);
+    } catch(err) {
+        return err;
+    }
 }
 
 /* displayStockInfo: function to build output of stock performance */
@@ -88,13 +99,28 @@ function displayStockInfo(info) {
 
 /* getStocksInfo: function to get stock information */
 async function getStocksInfo(userInputs) {
+    try {
+        let resp = validateUserInputs(userInputs);
+        if (resp.errors) {
+            let error = Object.values(resp.errors).join("\n");
+            utils.logError(error);
+            return Object.keys(resp.errors);
+        }
 
-    /*
-    step 1: validate user inputs
-    step 2: fetch stock information using API
-    step 3: display stock information
-    step 4: send slack notification to slack channel
-    */
+        userInputs = resp.inputs;
 
+        // get stock information using API ofr given user input
+        let stockInfo = await getStockPerformance(userInputs);
+        if (stockInfo.datatable.data.length === 0) {
+            utils.logInfo("\nNo stock information found for the given date range\n");
+            return null;
+        }
+
+        // return length of the data fetched from API
+        return stockInfo.datatable.data.length;
+
+    } catch(err) {
+        utils.logError(err);
+    }
 }
 
